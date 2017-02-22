@@ -1,16 +1,23 @@
-# $Id: spim.py 541 2005-04-23 05:27:00Z phf $
+# $Id: spim.py 556 2005-04-24 03:39:24Z phf $
 
 import generator as G
 import buffer as B
 import version as V
 
 class Generator(G.Generator):
+  """
+  Code generator for MIPS as implemented by SPIM.
+
+  TODO: Turning this into a native version, e.g. for NetBSD,
+  should be straightforward. Only the stuff for PRINT would
+  need some reworking.
+  """
 
   def __init__( self, name ):
     # name of output file
     self.name = name
     # counter for generating labels
-    self.counter = 0
+    self.counter = -1
     # buffer for data segment (variables)
     self.data = B.Buffer()
     # buffer for text segment (code)

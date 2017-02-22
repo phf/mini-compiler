@@ -1,0 +1,11 @@
+PROGRAM
+  VAR x
+BEGIN
+  x = 65534
+  PRINT x
+  x = x + 1
+  PRINT x
+  x = x + 1
+  PRINT x
+END
+

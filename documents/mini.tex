@@ -1,16 +1,30 @@
-\documentclass[letterpaper,12pt,twocolumn]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% $Id: mini.tex 622 2005-05-06 00:30:26Z phf $
+%
+% Copyright (c) 2005 by Peter H. Froehlich <phf@acm.org>.
+% All rights reserved.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,11pt,twocolumn]{article}
 
 \usepackage{hyperref}
 \usepackage{times}
 \usepackage{ftnright}
 \usepackage{verbatim}
+\usepackage{graphicx}
 
-\usepackage[USletter]{vmargin}
-\setmargrb{1in}{1in}{1in}{1in}
+\usepackage{float}
+\floatstyle{ruled}
+\restylefloat{figure}
+
+%\usepackage[USletter]{vmargin}
+%\setmargrb{1in}{1in}{1in}{1in}
 
 \usepackage{svn}
-\SVN$Rev: 538 $
-\SVN$Date: 2005-04-22 22:12:18 -0700 (Fri, 22 Apr 2005) $
+\SVN$Rev: 622 $
+\SVN$Date: 2005-05-05 17:30:26 -0700 (Thu, 05 May 2005) $
 
 \usepackage{color}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.5}
@@ -35,57 +49,390 @@ or omissions are of course Peter's fault. :-)}
 }
 \date{\SVNDate\\(Revision \SVNRev)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 \maketitle
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{The Language}
 
 Mini is a very simple programming language.
 %
+In theory all computations that can be performed using any
+other programming language can also be performed in Mini.
+%
+However, it can be rather difficult to find efficient solutions
+in Mini.
+
+%%%%%%%%%%
+
+\subsection{Programs}
+
 Programs consist of the keyword \texttt{PROGRAM} followed
 by (optional) variable declarations, followed by the keyword
 \texttt{BEGIN}, followed by (optional) instructions, followed
 by the keyword \texttt{END}:
 %
+\begin{quote}
 \begin{verbatim}
-  Program =
-    "PROGRAM" [VarDeclaration]
-    "BEGIN" {Statement} "END" .
+Program =
+  "PROGRAM" [VarDeclaration]
+  "BEGIN" {Instruction}
+  "END".
 \end{verbatim}
-%
+\end{quote}
+
+%%%%%%%%%%
+
+\subsection{Declarations}
+
 Variable declarations are introduced with the keyword
-\texttt{VAR} and list the variables separated by commas:
+\texttt{VAR} followed by the list of variables separated
+by commas:
 %
+\begin{quote}
 \begin{verbatim}
-  VarDeclaration =
-    "VAR" Identifier
-    {"," Identifier}.
+VarDeclaration =
+  "VAR" Identifier
+  {"," Identifier}.
 \end{verbatim}
+\end{quote}
+%
+Identifiers consist of one or more letters and
+are case-sensitive:
+%
+\begin{quote}
+\begin{verbatim}
+Identifier =
+  Letter {Letter}.
+Letter =
+  "a"|"b"|...|"z"|
+  "A"|"B"|...|"Z".
+\end{verbatim}
+\end{quote}
+
+%%%%%%%%%%
+
+\subsection{Instructions}
+
+There are only three possible instructions in Mini:
+%
+\begin{quote}
+\begin{verbatim}
+Instruction =
+  Assignment | While | Print.
+\end{verbatim}
+\end{quote}
+%
+Assignments store the value of an expression in a variable:
+%
+\begin{quote}
+\begin{verbatim}
+Assignment =
+  Identifier "=" Expression.
+\end{verbatim}
+\end{quote}
+%
+While loops are executed as long as the value of the
+controlling expression is greater than zero:
+%
+\begin{quote}
+\begin{verbatim}
+While =
+  "WHILE" Expression
+  "DO" {Instruction} "END".
+\end{verbatim}
+\end{quote}
+%
+Print instructions write the value of an expression to
+standard output:
+%
+\begin{quote}
+\begin{verbatim}
+Print =
+  "PRINT" Expression.
+\end{verbatim}
+\end{quote}
+
+%%%%%%%%%%
+
+\subsection{Expressions}
+
+Expressions allow addition and subtraction of factors,
+nothing else:
+%
+\begin{quote}
+\begin{verbatim}
+Expression =
+  ["+"|"-"] Factor
+  {("+"|"-") Factor}.
+\end{verbatim}
+\end{quote}
+%
+Factors are either identifiers denoting variables or
+constants:
+%
+\begin{quote}
+\begin{verbatim}
+Factor =
+  Identifier | Constant.
+\end{verbatim}
+\end{quote}
+%
+Constants consist of one or more digits and denote
+an integer value in base 10:
+%
+\begin{quote}
+\begin{verbatim}
+Constant =
+  Digit {Digit}.
+Digit =
+  "0"|"1"|...|"9".
+\end{verbatim}
+\end{quote}
+
+%%%%%%%%%%
+
+\subsection{Example}
+
+Here is a simple example program showing off all of
+Mini's features (except for unary negation):
+%
+\begin{quote}
+\verbatiminput{../examples/count.mini}
+\end{quote}
+%
+We initialize the variable \texttt{x} to the value \texttt{10};
+we then execute a loop as long as \texttt{x+1} is greater than
+\texttt{0}
+(that is, as long as \texttt{x} is greater than \texttt{-1});
+inside the loop with print the current value of \texttt{x} and
+then subtract \texttt{1} from \texttt{x}
+before the next iteration.
+%
+The resulting program ``counts down'' from \texttt{10} to
+\texttt{0}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{The Compiler}
 
+The basic task of our compiler is to translate (source) programs
+written in Mini into equivalent (target) programs
+written in assembly language for a certain platform.
+%
+Even for a simple language like Mini, the translation process can
+be rather complex.
+%
+It is therefore divided into simpler subtasks that each perform
+part of the translation.
+%
+Figure~\ref{flow} illustrates this ``division of labor'' in more
+detail.
+%
+Software systems of this form are often called ``pipeline''
+architectures.
+
+\begin{figure}
+\centering
+\includegraphics[height=0.3\textheight]{flow}
+\caption{Conceptual architecture in terms of data flows
+and compilation tasks.\label{flow}}
+\end{figure}
+
+There are, however, other views of the compiler as well.
+%
+Figure~\ref{class} illustrates the object-oriented design of
+the compiler using a UML class diagram~\cite{fowler:uml}.
+%
+TODO
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{class}
+\caption{Conceptual architecture in terms of classes
+and associations.\label{class}}
+\end{figure}
+
+%%%%%%%%%%
+
+\subsection{Lexical Analysis}
+
+Scanner
+TODO
+
+%%%%%%%%%%
+
+\subsection{Syntactic Analysis}
+
+Parser
+TODO
+
+%%%%%%%%%%
+
+\subsection{Code Generation}
+
+TODO
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{The Backends}
 
-  
+%%%%%%%%%%
 
+\subsection{MIPS on SPIM}
+
+This backend is also the default for the Mini compiler.
+%
+The current MIPS backend spits out code suitable for
+SPIM, a popular MIPS simulator \cite{larus:spim}.
+%
+Compile an example like this:
+%
+\begin{verbatim}
+  ./mini examples/prime
+\end{verbatim}
+%
+Run the generated code as follows:
+%
+\begin{verbatim}
+  spim examples/prime.s
+\end{verbatim}
+%
+That's all there is to it, thanks to a very nicely
+designed simulator.
+
+%%%%%%%%%%
+
+\subsection{MMIX}
+
+The MMIX backend spits out code suitable for the Unix
+version of Knuth's MMIXware \cite{knuth:mmixware}.
+%
+The process of running generated code is a little more
+involved.
+%
+Compile an example like this:
+%
+\begin{verbatim}
+  ./mini -x examples/prime
+\end{verbatim}
+%
+Now use the MMIX assembler to generate an object file:
+%
+\begin{verbatim}
+  mmixal examples/prime.mms
+\end{verbatim}
+%
+Run the generated code as follows:
+%
+\begin{verbatim}
+  mmix examples/prime.mmo
+\end{verbatim}
+%
+That's all there is to it, thanks to a nicely designed
+simulator.
+
+TODO
+\cite{knuth:mmix}
+\cite{knuth:mmix-taocp}
+
+%%%%%%%%%%
+
+\subsection{LC-3}
+
+The LC-3 backend spits out code suitable for the Unix
+version of the LC-3 simulator \cite{lumetta:lc3}.
+%
+The process of running generated code is a little more
+involved.
+%
+Compile an example like this:
+%
+\begin{verbatim}
+  ./mini -l examples/4711
+\end{verbatim}
+%
+Now use the LC-3 assembler to generate an object file:
+%
+\begin{verbatim}
+  lc3as examples/4711.asm
+\end{verbatim}
+%
+Also, you have to generate an object file for the support
+library \texttt{newtraps.asm}:
+%
+\begin{verbatim}
+  lc3as newtraps.asm
+\end{verbatim}
+%
+Now you have all the pieces in place.
+%
+Start the LC-3 simulator:
+%
+\begin{verbatim}
+  lc3sim
+\end{verbatim}
+%
+At the prompt, first load the support library:
+%
+\begin{verbatim}
+  file newtraps
+\end{verbatim}
+%
+The load the object file that came out of the Mini
+compiler:
+%
+\begin{verbatim}
+  file examples/4711
+\end{verbatim}
+%
+And finally run the whole thing with this command:
+%
+\begin{verbatim}
+  continue
+\end{verbatim}
+%
+Ah, it's magic! Or is it tragic? :-)
+
+The current LC-3 backend doesn't properly deal with
+numbers larger than 16 bit, which is why some of the
+example programs don't work.
+%
+The \texttt{lc3as} assembler doesn't complain either,
+which might be more of a problem\dots{}
+
+%%%%%%%%%%
+
+\subsection{Motorola 6809}
+
+TODO
+\cite{benschop:6809}
+\cite{bellis:6809}
+
+%%%%%%%%%%
+
+\subsection{Motorola 68000}
+
+This backend is incomplete since I cannot find a decent
+M68K simulator. If you have suggestions, let me know.
+
+TODO
+find references
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliography{mini}
+\bibliographystyle{plain}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-
-
-
-
-
-
-
-
-
-
-               Mini
-            ==========
-
+%
+% Snippets of Fridtjof's original Mini.LiesMich file, for reference.
+%
 
 Dieses Verzeichnis enthält den Mini-Compiler, der im Amiga Programmieren
 Sonderheft (Markt&Technik) beschrieben wird.
@@ -96,43 +443,7 @@ die auch in einem 'großen' Compiler zu finden sind.
 
 [33;1mDie Sprache Mini:[m
 
-  Mini ist eine sehr einfache Programmiersprache. Ein Mini-Programm
-  besteht aus dem Schlüsselwort [1mPROGRAM[m, einem optionalen
-  Varialbendeklarationsteil, dem Schlüsselwort [1mBEGIN[m, den Anweisungen
-  und [1mEND[m:
-  
-    [1mPROGRAM [m[VarDeclaration] [1mBEGIN[m {Statement} [1mEND[m
-  
-  Der Variablendeklarationsteil wird durch [1mVAR[m eingeleitet und listet
-  die Namen der Variablen, die durch Kommas getrennt werden, auf:
-  
-    [1mVAR[m Identifier { "," Identifier }
-  
-  An Anweisungen kennt Mini lediglich die Zuweisung eines Wertes an eine
-  Variable mit '=':
-  
-    Identifier "=" Expression
-  
-  eine einfache Schleife, die solange ausgeführt wird, wie der Ausdruck
-  hinter [1mWHILE[m größer als null ist:
-  
-    [1mWHILE[m Expression [1mDO[m { Statement } [1mEND[m
-  
-  und eine Ausgabeanweisung für Zahlen
-  
-    [1mPRINT[m Expression
-  
-  In einem Ausdruck können die Faktoren lediglich addiert oder subtrahiert
-  werden:
-  
-    [ "+" | "-" ] Factor { [ "+" | "-" ] Factor }
-  
-  Faktoren sind entweder Variablenbezeichner oder Konstanten:
-  
-    Identifier | Constant
-  
-  Die EBNF-Syntax von Mini ist in der Datei Grammatik.ebnf gegeben.
-  
+%%% DONE
 
 [33;1mBenutzung des Compilers:[m
 
@@ -182,19 +493,3 @@ die auch in einem 'großen' Compiler zu finden sind.
   Komplexe Dinge berechnet werden. Wer weitere Mini-Programme schreibt,
   die interessante Dinge berechnen, der schicke mit bitte seine Mini-
   Quelltexte.
-
-  Theoretisch sind alle Berechnungen, die mit irgendeiner Programmiersprache
-  formuliert werden können, auch mit Mini lösbar. Schwierig ist es nur,
-  auch in Mini effiziente Lösungen zu finden.
-
-
-Viel Spaß mit dem Mini-Compiler!
-
-
----  Fridtjof.
-                                                             Fridtjof Siebert
-                                                                 Nobileweg 67
-                                                            7000 Stuttgart 40
-                                   siebert@minnie.informatik.uni-stuttgart.de
-                                                    fridi@amokst.adsp.sub.org
-

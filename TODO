@@ -1,6 +1,12 @@
-$Id: TODO 539 2005-04-23 05:15:31Z phf $
+$Id: TODO 622 2005-05-06 00:30:26Z phf $
 
 - the sources could use some more documentation, that's for sure
-- write other backends, e.g. LC-3, 6502, ... maybe even 68000 :-)
+- the m68k backend needs work, well first I need a good simulator... :-/
+- the LC-3 backend does not deal with large numbers correctly
+  (neither does the assembler lc3as for that matter, scary)
+- the 6809 backend is currently quite a hack, no large numbers either
+- write other backends, e.g. 6502, Z80, x86, ...
 - the PDF documentation is incomplete, needs lots of work
+- not all code generators use the new buffer.py interface yet
+- not all code generators maintain a constant pool yet
 

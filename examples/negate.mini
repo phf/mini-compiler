@@ -1,0 +1,8 @@
+PROGRAM
+  VAR x
+BEGIN
+  x = 11111
+  PRINT x
+  x = -x
+  PRINT x
+END

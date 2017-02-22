@@ -1,6 +1,9 @@
-# $Id: parser.py 541 2005-04-23 05:27:00Z phf $
+# $Id: parser.py 622 2005-05-06 00:30:26Z phf $
 
 class Parser:
+  """
+  TODO
+  """
 
   def __init__( self, scanner, generator ):
     self.lex = scanner

@@ -1,10 +1,9 @@
 PROGRAM
-VAR x
+  VAR x
 BEGIN
   x = 10
-  WHILE x DO
+  WHILE x+1 DO
     PRINT x
     x = x - 1
   END
 END
-

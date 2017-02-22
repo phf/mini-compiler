@@ -1,12 +1,45 @@
-# $Id: spim.py 528 2005-04-23 03:42:20Z phf $
+# $Id: generator.py 622 2005-05-06 00:30:26Z phf $
 
 class Generator:
   """
   Interface for code generators.
+
+  The central idea for our code generators is to use
+  an accumulator (register) and a scratch (register)
+  to perform all arithmetic. It helps that Mini only
+  supports "+" and "-": We don't have to worry about
+  precedence at all. It also helps that we write out
+  assembly source, not object files. In fact most of
+  Mini's error handling is "outsourced" this way.
+
+  The methods below generate code that performs the
+  following operations:
+
+    load:     A = variable
+    store:    variable = A
+    constant: A = natural number
+
+    move:     S = A
+    add:      A = A + S
+    negate:   A = -A
+
+    test:
+    branch:
+    jump:
+
+    declare:
+    next:
+    label:
+
+    write:    print A
+
+    commit:
+
+  Here "A" is the accumulator and "S" is the scratch.
   """
 
   def __init__( self, name ):
-    """Create a code generator."""
+    """Create a code generator writing to file name."""
     pass
 
   def declare( self, name ):

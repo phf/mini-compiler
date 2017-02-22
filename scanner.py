@@ -1,8 +1,11 @@
-# $Id: scanner.py 510 2005-04-22 03:17:24Z phf $
+# $Id: scanner.py 622 2005-05-06 00:30:26Z phf $
 
 import string as S
 
 class Token:
+  """
+  A simple class representing tokens.
+  """
   def __init__( self, kind, value=None ):
     self.kind = kind
     self.value = value
@@ -13,6 +16,9 @@ class Token:
       return self.kind
 
 class Scanner:
+  """
+  TODO
+  """
   def __init__( self, name ):
     file = open( name )
     self.src = file.read()

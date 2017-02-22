@@ -1,13 +1,36 @@
-$Id: KUDOS 531 2005-04-23 04:34:32Z phf $
+$Id: KUDOS 621 2005-05-06 00:05:21Z phf $
 
-The programming language Mini was designed and implemented by
-Fridtjof Siebert (see http://www.fridi.de/ for more). Mini was
-a case study for an introduction to compiler design, published
-in a special issue of a German computer magazine back in 1992.
+MINI
 
-The original implementation was for the Commodore Amiga; it
-was written in Oberon and generated code for the Motorola 68K.
-I recently found Fridtjof's original sources and remembered
-reading his article all those years ago. So as a "tribute" to
-the olden days, I decided to reimplement the language. :-)
+The programming language Mini was designed and first implemented
+by Fridtjof Siebert (see http://www.fridi.de/ for more). Mini was
+a case study for an introduction to compiler design, published in
+a special issue of a German computer magazine back in 1992.
+
+The original implementation was for the Commodore Amiga, written
+in Oberon, and generated code for the Motorola 68000. I found the
+original sources in April 2005 remembered reading the article all
+those years ago. So as a "tribute" to "the olden days," I decided
+to reimplement the language. :-)
+
+LC-3
+
+The "newtraps.asm" support library is courtesy of Dave McCarthy
+(see http://www.cosc.brocku.ca/Faculty/index.php3?nameflag=McCarthy)
+and was originally written by Robert Flack.
+
+Brian Linard <blinard@cs.ucr.edu> helped a lot with the (up and
+coming) LC-3 code generator supporting 32-bit arithmetic. Brian
+has taught taught the introductory computer architecture course
+for years, no wonder he knows this sad excuse for a processor by
+heart. :-)
+
+MMIX
+
+For the MMIX code generator I copied pieces of the IO routines
+from an Algol-68S compiler by Ziyang Wang <ziyang@cs.nyu.edu>.
+
+Sample code from a book published by my alma mater also helped
+(see http://www.informatik.fh-muenchen.de/~mmix/MMIXBuch/ for
+details).
 

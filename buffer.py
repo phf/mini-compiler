@@ -1,4 +1,4 @@
-# $Id: buffer.py 524 2005-04-23 02:56:23Z phf $
+# $Id: buffer.py 606 2005-05-02 07:36:56Z phf $
 
 class Buffer:
   """
@@ -73,6 +73,22 @@ class Buffer:
     line = format % (label, operator, operands, comment)
     self._buffer += line
     return line
+
+  def label( self, label ):
+    """
+    Append a label.
+
+    Convenience function calling append() in turn.
+    """
+    self.append( label )
+
+  def format( self, operator, operand="", comment="" ):
+    """
+    Append an instruction.
+
+    Convenience function calling append() in turn.
+    """
+    self.append( "", operator, operand, comment )
 
   def freeze( self ):
     """
