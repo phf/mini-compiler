@@ -1,0 +1,13 @@
+$Id: KUDOS 531 2005-04-23 04:34:32Z phf $
+
+The programming language Mini was designed and implemented by
+Fridtjof Siebert (see http://www.fridi.de/ for more). Mini was
+a case study for an introduction to compiler design, published
+in a special issue of a German computer magazine back in 1992.
+
+The original implementation was for the Commodore Amiga; it
+was written in Oberon and generated code for the Motorola 68K.
+I recently found Fridtjof's original sources and remembered
+reading his article all those years ago. So as a "tribute" to
+the olden days, I decided to reimplement the language. :-)
+

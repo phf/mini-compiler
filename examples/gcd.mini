@@ -1,0 +1,19 @@
+PROGRAM
+
+VAR
+  a,b,c
+
+BEGIN
+
+  a = 622221768
+  b = 176543081
+
+  WHILE b-a DO c = a  a = b  b = c END
+  WHILE a-b DO
+    a = a - b
+    WHILE b-a DO c = a  a = b  b = c END
+  END
+
+  PRINT a
+
+END

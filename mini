@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+# $Id: mini 515 2005-04-22 06:38:31Z phf $
+
+# A simple wrapper for command-line invocation.
+
+if __name__ == "__main__":
+  import mini as M
+  M.main()
+

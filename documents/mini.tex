@@ -1,0 +1,200 @@
+\documentclass[letterpaper,12pt,twocolumn]{article}
+
+\usepackage{hyperref}
+\usepackage{times}
+\usepackage{ftnright}
+\usepackage{verbatim}
+
+\usepackage[USletter]{vmargin}
+\setmargrb{1in}{1in}{1in}{1in}
+
+\usepackage{svn}
+\SVN$Rev: 538 $
+\SVN$Date: 2005-04-22 22:12:18 -0700 (Fri, 22 Apr 2005) $
+
+\usepackage{color}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\definecolor{darkgreen}{rgb}{0.0,0.3,0.0}
+\definecolor{darkred}{rgb}{0.5,0.0,0.0}
+\hypersetup{
+colorlinks=true,
+urlcolor=darkblue,% urls
+citecolor=darkred,% citation of reference
+linkcolor=darkgreen,% table of contents
+}
+
+\title{
+\textbf{The Programming Language Mini}%
+\thanks{This document is based in part on documentation originally
+written by \href{http://www.fridi.de/}{Fridtjof Siebert}. Any errors
+or omissions are of course Peter's fault. :-)}
+}
+\author{
+\href{http://www.factorial.com/forward/phf/work/}{Peter H. Fr{\"o}hlich}\\
+\href{mailto:phf@acm.org}{phf@acm.org}
+}
+\date{\SVNDate\\(Revision \SVNRev)}
+
+\begin{document}
+\maketitle
+
+\section{The Language}
+
+Mini is a very simple programming language.
+%
+Programs consist of the keyword \texttt{PROGRAM} followed
+by (optional) variable declarations, followed by the keyword
+\texttt{BEGIN}, followed by (optional) instructions, followed
+by the keyword \texttt{END}:
+%
+\begin{verbatim}
+  Program =
+    "PROGRAM" [VarDeclaration]
+    "BEGIN" {Statement} "END" .
+\end{verbatim}
+%
+Variable declarations are introduced with the keyword
+\texttt{VAR} and list the variables separated by commas:
+%
+\begin{verbatim}
+  VarDeclaration =
+    "VAR" Identifier
+    {"," Identifier}.
+\end{verbatim}
+
+\section{The Compiler}
+
+
+\section{The Backends}
+
+  
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+               Mini
+            ==========
+
+
+Dieses Verzeichnis enthält den Mini-Compiler, der im Amiga Programmieren
+Sonderheft (Markt&Technik) beschrieben wird.
+
+Dieser Compiler dürfte mit weniger als 8KB Quelltext und 15KB Programmcode
+einer der kleinsten Compiler überhaupt sein. Dennoch enthält er alle Teile,
+die auch in einem 'großen' Compiler zu finden sind.
+
+[33;1mDie Sprache Mini:[m
+
+  Mini ist eine sehr einfache Programmiersprache. Ein Mini-Programm
+  besteht aus dem Schlüsselwort [1mPROGRAM[m, einem optionalen
+  Varialbendeklarationsteil, dem Schlüsselwort [1mBEGIN[m, den Anweisungen
+  und [1mEND[m:
+  
+    [1mPROGRAM [m[VarDeclaration] [1mBEGIN[m {Statement} [1mEND[m
+  
+  Der Variablendeklarationsteil wird durch [1mVAR[m eingeleitet und listet
+  die Namen der Variablen, die durch Kommas getrennt werden, auf:
+  
+    [1mVAR[m Identifier { "," Identifier }
+  
+  An Anweisungen kennt Mini lediglich die Zuweisung eines Wertes an eine
+  Variable mit '=':
+  
+    Identifier "=" Expression
+  
+  eine einfache Schleife, die solange ausgeführt wird, wie der Ausdruck
+  hinter [1mWHILE[m größer als null ist:
+  
+    [1mWHILE[m Expression [1mDO[m { Statement } [1mEND[m
+  
+  und eine Ausgabeanweisung für Zahlen
+  
+    [1mPRINT[m Expression
+  
+  In einem Ausdruck können die Faktoren lediglich addiert oder subtrahiert
+  werden:
+  
+    [ "+" | "-" ] Factor { [ "+" | "-" ] Factor }
+  
+  Faktoren sind entweder Variablenbezeichner oder Konstanten:
+  
+    Identifier | Constant
+  
+  Die EBNF-Syntax von Mini ist in der Datei Grammatik.ebnf gegeben.
+  
+
+[33;1mBenutzung des Compilers:[m
+
+  Der Compiler erwartet den Namen einer Mini-Quelltextdatei als Argument.
+  Die Ausgabe des Compilers ist der erzeugte Assembler-Code. Er sollte in
+  eine Datei umgeleitet werden. Bsp:
+
+    Mini >Fibonacci.s Fibonacci.mini
+
+  Nun muß der Text noch assembliert werden (etwa mit [3ma68k[m von Fish 521):
+
+    a68k Fibonacci.s
+
+  zuletzt wird mit
+
+    OLink FROM Fibonacci.o TO Fibonacci
+
+  oder mit
+
+    BLink Fibonacci.o TO Fibonacci
+
+  ein ausführbares Programm erzeugt.
+
+
+[33;1mBeispielprogramme:[m
+
+  Fibonacci.mini:
+
+    Berechnet die ersten 46 Fibonacci-Zahlen
+
+  Fak.mini:
+
+    Berechnet die Fakultäten 1! bis 12!
+
+  GGT.mini:
+
+    Berechnet den GGT zweier Zahlen (Konstanten im Programm)
+
+  Prim.mini:
+
+    Bestimmt die Primzahlen unter den Zahlen 1 bis 1000.
+
+
+[33;1mWeitere Mini-Programme:[m
+
+  Wie man an Prim.mini sieht, können mit dieser einfachen Sprache auch recht
+  Komplexe Dinge berechnet werden. Wer weitere Mini-Programme schreibt,
+  die interessante Dinge berechnen, der schicke mit bitte seine Mini-
+  Quelltexte.
+
+  Theoretisch sind alle Berechnungen, die mit irgendeiner Programmiersprache
+  formuliert werden können, auch mit Mini lösbar. Schwierig ist es nur,
+  auch in Mini effiziente Lösungen zu finden.
+
+
+Viel Spaß mit dem Mini-Compiler!
+
+
+---  Fridtjof.
+                                                             Fridtjof Siebert
+                                                                 Nobileweg 67
+                                                            7000 Stuttgart 40
+                                   siebert@minnie.informatik.uni-stuttgart.de
+                                                    fridi@amokst.adsp.sub.org
+

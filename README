@@ -1,0 +1,39 @@
+$Id: README 531 2005-04-23 04:34:32Z phf $
+
+A basic single-pass compiler for a MINImalistic programming language
+
+Peter Froehlich <phf@acm.org>
+http://www.factorial.com/forward/phf/work/
+
+The programming language Mini was designed by Fridtjof Siebert, see
+the KUDOS file. This version is written in Python and generates MIPS
+code for the SPIM simulator. The language itself is unchanged, all
+the original example programs work. :-)
+
+mini.tex
+mini.pdf
+  Translation of Fridtjof's Mini.LiesMich file
+
+buffer.py
+generator.py
+mini.py
+parser.py
+scanner.py
+spim.py
+version.py
+  Python implementation
+
+factorial.mini
+fibonacci.mini
+gcd.mini
+prime.mini
+  Fridtjof's original example programs
+
+4711.mini
+count.mini
+empty.mini
+  Some test cases I wrote up, not impressive
+
+grammar.ebnf
+  Fridtjof's original grammatik.ebnf
+

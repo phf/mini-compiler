@@ -1,0 +1,6 @@
+$Id: TODO 539 2005-04-23 05:15:31Z phf $
+
+- the sources could use some more documentation, that's for sure
+- write other backends, e.g. LC-3, 6502, ... maybe even 68000 :-)
+- the PDF documentation is incomplete, needs lots of work
+

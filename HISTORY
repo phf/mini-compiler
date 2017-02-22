@@ -1,0 +1,12 @@
+$Id: HISTORY 540 2005-04-23 05:21:42Z phf $
+
+Release 0.2 - 2005/xx/xx
+
+First released version.
+
+Release 0.1 - 2005/04/22
+
+Prerelease for my Spring 2005 compiler course at UC Riverside.
+A straightforward port to Python and SPIM. Code generation is
+already pretty modular. Code name "Wedding" for this one. :-)
+

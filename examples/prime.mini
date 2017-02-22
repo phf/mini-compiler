@@ -1,0 +1,27 @@
+PROGRAM
+
+VAR
+  a, b, c
+
+BEGIN
+  a = 2
+  WHILE 1000 - a DO
+    b = 2
+    WHILE a - b DO
+      c = b
+      WHILE a - c DO
+        c = c + b
+      END
+      WHILE a - c + 1 DO
+        b = 1000000000
+        c = a + 1
+      END
+      b = b + 1
+    END
+    WHILE 1000000000 - b DO
+      PRINT a
+      b = 1000000000
+    END
+    a = a + 1
+  END
+END

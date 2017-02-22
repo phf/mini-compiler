@@ -1,0 +1,10 @@
+PROGRAM
+VAR x
+BEGIN
+  x = 10
+  WHILE x DO
+    PRINT x
+    x = x - 1
+  END
+END
+

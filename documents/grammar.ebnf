@@ -1,0 +1,12 @@
+Program        -> PROGRAM [ VarDeclaration ] BEGIN {Statement} END .
+VarDeclaration -> VAR Identifier { "," Identifier } .
+Statement      -> Assignment | While | Print .
+Assignment     -> Identifer "=" Expression .
+While          -> WHILE Expression DO { Statement } END .
+Print          -> PRINT Expression
+Expression     -> [ "+" | "-" ] Factor { ( "+" | "-" ) Factor } .
+Factor         -> Identifier | Constant .
+Identifier     -> Letter { Letter } .
+Constant       -> Digit { Digit } .
+Letter         -> "a" | .. | "z" | "A" | .. | "Z" .
+Digit          -> "0" | .. | "9" .
