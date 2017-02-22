@@ -2,7 +2,7 @@ PROGRAM
   VAR x
 BEGIN
   x = 10
-  WHILE x+1 DO
+  WHILE x + 1 DO
     PRINT x
     x = x - 1
   END

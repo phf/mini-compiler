@@ -1,12 +1,37 @@
-$Id: TODO 622 2005-05-06 00:30:26Z phf $
+$Id: TODO 652 2005-05-11 06:53:07Z phf $
+
+TOP PRIORITY
+
+- the I/O code for MMIX, PowerPC, and i386  could use a cleanup
+- the I/O code for MIPS should not rely on the SPIM-only trap
+
+SOSO PRIORITY
 
 - the sources could use some more documentation, that's for sure
-- the m68k backend needs work, well first I need a good simulator... :-/
-- the LC-3 backend does not deal with large numbers correctly
-  (neither does the assembler lc3as for that matter, scary)
-- the 6809 backend is currently quite a hack, no large numbers either
-- write other backends, e.g. 6502, Z80, x86, ...
 - the PDF documentation is incomplete, needs lots of work
 - not all code generators use the new buffer.py interface yet
 - not all code generators maintain a constant pool yet
+  (and maybe not all of them should, viva immediate mode!);
+  in any case, maybe I can easily implement the pool once in
+  the base class?
+- the LC-3 backend does not deal with large numbers correctly
+  (neither does the assembler lc3as for that matter, scary)
+- the I/O code for LC-3 should be integrated with the backend
+  (vaporize newtraps.asm for good)
+- the backends should write out some version/platform info at
+  the top of the sources; the import version as V stuff should
+  be handled in the generator.py base module
+
+BOTTOM OF THE BARREL
+
+- the m68k backend needs work, but first I need a good simulator... :-/
+- the 6809 backend is currently quite a hack, no large numbers either
+- switch the scanner to regular expressions? not sure about that...
+- write other backends, e.g. 6502, Z80, VAX, ... what else?
+- separate code generation from OS and simulator dependencies?
+  (major surgery to be sure)
+- more example programs; ideas include prime factors, integer square
+  and square root, ... feel free to volunteer! :-)
+- finish properly GPLing everything, in case example programs should
+  carry the GPL message a well?
 

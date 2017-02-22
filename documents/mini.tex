@@ -1,9 +1,25 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% $Id: mini.tex 622 2005-05-06 00:30:26Z phf $
+% $Id: mini.tex 651 2005-05-11 03:36:01Z phf $
 %
 % Copyright (c) 2005 by Peter H. Froehlich <phf@acm.org>.
 % All rights reserved.
+%
+% This file is part of Mini.
+%
+% Mini is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published
+% by the Free Software Foundation; either version 2 of the License,
+% or (at your option) any later version.
+%
+% Mini is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Mini; if not, write to the Free Software Foundation,
+% Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -19,12 +35,12 @@
 \floatstyle{ruled}
 \restylefloat{figure}
 
-%\usepackage[USletter]{vmargin}
-%\setmargrb{1in}{1in}{1in}{1in}
+\usepackage[USletter]{vmargin}
+\setmargrb{1in}{1in}{1in}{1in}
 
 \usepackage{svn}
-\SVN$Rev: 622 $
-\SVN$Date: 2005-05-05 17:30:26 -0700 (Thu, 05 May 2005) $
+\SVN$Rev: 651 $
+\SVN$Date: 2005-05-10 20:36:01 -0700 (Tue, 10 May 2005) $
 
 \usepackage{color}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.5}
@@ -36,6 +52,8 @@ urlcolor=darkblue,% urls
 citecolor=darkred,% citation of reference
 linkcolor=darkgreen,% table of contents
 }
+
+\setcounter{tocdepth}{2}
 
 \title{
 \textbf{The Programming Language Mini}%
@@ -59,13 +77,18 @@ or omissions are of course Peter's fault. :-)}
 
 \section{The Language}
 
-Mini is a very simple programming language.
+Mini is a \emph{very} simple programming language.
 %
 In theory all computations that can be performed using any
 other programming language can also be performed in Mini.
 %
 However, it can be rather difficult to find efficient solutions
 in Mini.
+%
+The program \texttt{prime.mini} illustrates this fact very well.
+%
+If you write additional Mini programs for interesting problems,
+please send them in for inclusion in future Mini distributions.
 
 %%%%%%%%%%
 
@@ -243,12 +266,53 @@ architectures.
 and compilation tasks.\label{flow}}
 \end{figure}
 
-There are, however, other views of the compiler as well.
+The \emph{scanner} performs the task of
+\emph{lexical analysis}:
 %
-Figure~\ref{class} illustrates the object-oriented design of
-the compiler using a UML class diagram~\cite{fowler:uml}.
+It processes the stream of characters that initially
+represent the source program and identifies larger
+logical units called \emph{tokens}.
 %
+For example, the three characters ``\texttt{137}'' are
+``translated'' into the token \texttt{Constant<137>},
+while the four characters ``\texttt{help}'' are
+``translated'' into the token \texttt{Identifier<"help">}.
+%
+A \emph{token} is a string of characters that ``makes
+sense'' as a whole in the programming language we are
+translating.
+%
+Other examples for tokens are keywords like ``\texttt{END}''
+or special symbols like \texttt{=} for assignment.
+
 TODO
+
+However, Figure~\ref{flow} is only one of many views of
+a compiler.
+%
+It emphasizes the three main tasks of lexical analysis,
+syntactic analysis, and code generation.
+%
+It does not, however, show how those tasks (also called
+``phases'') interact.
+
+TODO
+
+In particular, the three ``phases'' of scanner, parser,
+and code generator do not run completely independently
+in our compiler.
+%
+Figure~\ref{class} illustrates the object-oriented design
+of the compiler using a UML class diagram~\cite{fowler:uml}.
+%
+This view shows that the parser is ``in control'' during
+the whole compilation process.
+%
+It uses the scanner to request tokens whenever it needs
+to access the source file.
+%
+It also uses the code generator whenever it needs to
+access the target file.
 
 \begin{figure}
 \centering
@@ -405,6 +469,59 @@ example programs don't work.
 The \texttt{lc3as} assembler doesn't complain either,
 which might be more of a problem\dots{}
 
+\subsubsection{Extended Arithmetic}
+
+The basic LC-3 code generator uses the processor's
+native 16-bit arithmetic.
+%
+Support for 32-bit arithmetic must be implemented
+in terms of the existing 16-bit arithmetic.
+%
+For this purpose, we consider the eight 16-bit
+registers \texttt{R0}\dots{}\texttt{R7} as four
+32-bit register \texttt{L0}\dots{}\texttt{L3}.
+%
+Register \texttt{R0} holds the high 16-bit of
+\texttt{L0} while register \texttt{R1} holds
+the low 16-bit of \texttt{L0} and so on for
+the remaining registers.
+
+We now perform a 32-bit addition by performing two
+16-bit additions, one for the low word and one for
+the high word.
+%
+However, we also have to take into account the
+possibility of overflow when adding the two low
+16-bit registers.
+%
+If there is an overflow, we have to perform yet
+another addition to add 1 to the high 16-bit
+register.
+%
+The problem with this is that the LC-3 does not
+provide a carry bit that we could use for this
+purpose.
+%
+Instead, we have to analyze the possible cases in
+which an overflow arises using explicit checks.
+
+If both low words are positive (bit 15 is 0) we can
+not possibly generate an overflow; note that we talk
+about an overflow \emph{into} the high word, not an
+overflow \emph{inside} the low word.
+%
+If both low words are negative (bit 15 is 1) we will
+certainly generate an overflow.
+%
+If the two low words have different signs, we can only
+tell if there was an overflow \emph{after} we perform
+the actual addition.
+%
+If the result is negative, there was no overflow, but
+if the result is positive, there was an overflow.
+
+TODO
+
 %%%%%%%%%%
 
 \subsection{Motorola 6809}
@@ -413,12 +530,124 @@ TODO
 \cite{benschop:6809}
 \cite{bellis:6809}
 
+\subsubsection{Extended Arithmetic}
+
+The basic 6809 code generator uses the processor's
+native 16-bit arithmetic:
+%
+The two 8-bit accumulators \texttt{A} and \texttt{B}
+are used as the 16-bit accumulator \texttt{D}.
+%
+Instructions such as \texttt{ADDD} are used to add
+16-bit quantities from memory to \texttt{D}.
+
+Support for 32-bit arithmetic could have been added
+in a style similar to the LC-3 above.
+%
+However, the 6809 offers another alternative as well.
+%
+Unlike the 16-bit \texttt{ADD} instruction, the 8-bit
+\texttt{ADC} instruction allows additions that take a
+carry-bit into account.
+%
+Unlike the complicated an ugly branching logic that
+was necessary for the LC-3, we can therefore perform
+32-bit addition simply by doing four 8-bit additions
+with carry.
+
+TODO
+
 %%%%%%%%%%
 
 \subsection{Motorola 68000}
 
 This backend is incomplete since I cannot find a decent
 M68K simulator. If you have suggestions, let me know.
+
+TODO
+find references
+
+%%%%%%%%%%
+
+\subsection{Motorola PowerPC}
+
+The PowerPC backend spits out code suitable for Mac OS X
+10.3 (and hopefully later).
+%
+Yes, this is actually a native-code backend, no simulator
+needed; you do need a Mac though\dots{}
+%
+Compile an example like this:
+%
+\begin{verbatim}
+  ./mini -p examples/prime
+\end{verbatim}
+%
+Now use the \texttt{as} assembler to generate an object file:
+%
+\begin{verbatim}
+  as -o examples/prime.o
+    examples/prime.s
+\end{verbatim}
+%
+Now use the \texttt{ld} linker to link against the minimum
+set of libraries:
+%
+\begin{verbatim}
+  ld -o examples/prime
+    -lcrt1.o examples/prime.o
+    -lSystem
+\end{verbatim}
+%
+Now you can finally run the whole thing with like this:
+%
+\begin{verbatim}
+  ./examples/prime
+\end{verbatim}
+%
+Pretty impressive, huh? :-)
+
+TODO
+find references
+
+%%%%%%%%%%
+
+\subsection{Intel 80386 (aka IA-32)}
+
+The Intel 80386 backend spits out code suitable for Linux
+boxes.
+%
+Yes, this is another native-code backend, no simulator
+needed; you do need a Linux box though\dots{}
+%
+Compile an example like this:
+%
+\begin{verbatim}
+  ./mini -i examples/prime
+\end{verbatim}
+%
+Now use the \texttt{as} assembler to generate an object file:
+%
+\begin{verbatim}
+  as -o examples/prime.o
+    examples/prime.s
+\end{verbatim}
+%
+Now use the \texttt{ld} linker to link against the minimum
+set of libraries:
+%
+\begin{verbatim}
+  ld -o examples/prime
+    examples/prime.o
+\end{verbatim}
+%
+Now you can finally run the whole thing with like this:
+%
+\begin{verbatim}
+  ./examples/prime
+\end{verbatim}
+%
+Pretty impressive, huh? :-)
 
 TODO
 find references
@@ -487,9 +716,4 @@ die auch in einem 'großen' Compiler zu finden sind.
     Bestimmt die Primzahlen unter den Zahlen 1 bis 1000.
 
 
-[33;1mWeitere Mini-Programme:[m
-
-  Wie man an Prim.mini sieht, können mit dieser einfachen Sprache auch recht
-  Komplexe Dinge berechnet werden. Wer weitere Mini-Programme schreibt,
-  die interessante Dinge berechnen, der schicke mit bitte seine Mini-
-  Quelltexte.
+

@@ -1,4 +1,4 @@
-$Id: README 621 2005-05-06 00:05:21Z phf $
+$Id: README 651 2005-05-11 03:36:01Z phf $
 
 A basic single-pass compiler for a MINImalistic programming language
 
@@ -10,7 +10,8 @@ the KUDOS file. The language is unchanged, all the original example
 programs work (modulo machine restrictions that is). :-)
 
 This version is written in Python and generates MIPS code for the
-SPIM simulator, MMIX code, or LC-3 code.
+SPIM simulator, MMIX code, LC-3 code, PowerPC code for Mac OS X,
+or Intel 80386 code for Linux.
 
 mini.tex
 mini.pdf
@@ -19,10 +20,12 @@ mini.pdf
 
 buffer.py
 generator.py
+i386.py
 lc3.py
 mini.py
 mmix.py
 parser.py
+powerpc.py
 scanner.py
 spim.py
 version.py

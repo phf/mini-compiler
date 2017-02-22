@@ -1,4 +1,12 @@
-$Id: HISTORY 625 2005-05-06 00:33:47Z phf $
+$Id: HISTORY 656 2005-05-11 07:14:54Z phf $
+
+Release 0.3 - 2005/05/11
+
+Added native code generators for Motorola PowerPC under
+Mac OS X 10.3 and for Intel 80386 machines (aka IA-32)
+under some Linux (whatever we have on the servers at UC
+Riverside, I didn't bother to check). Code name "Fog"
+for this one. ;-}
 
 Release 0.2 - 2005/05/05
 
